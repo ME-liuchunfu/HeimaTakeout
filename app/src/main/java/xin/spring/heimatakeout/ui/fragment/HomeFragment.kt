@@ -22,6 +22,8 @@ import xin.spring.heimatakeout.ui.adapter.HomeRvAdapter
 class HomeFragment: Fragment(){
 
     lateinit var homeRvAdapter : HomeRvAdapter
+    
+    lateinit var rvHome :RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater?,container: ViewGroup?,savedInstanceState: Bundle?): View? {
         val view = View.inflate(activity, R.layout.fragment_home, null);
