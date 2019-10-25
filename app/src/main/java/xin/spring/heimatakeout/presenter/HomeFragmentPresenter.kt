@@ -22,50 +22,17 @@ import xin.spring.heimatakeout.ui.fragment.HomeFragment
  * @updateAuthor $
  * @updateDes
  */
-class HomeFragmentPresenter(val homeFragment: HomeFragment){
-
-    val takeoutService: TakeoutService
-
-    init {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Api.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        takeoutService = retrofit.create<TakeoutService>(TakeoutService::class.java)
-    }
+class HomeFragmentPresenter(val homeFragment: HomeFragment) : NetPresenter(){
 
     fun getHomeInfo(){
         val homeCall = takeoutService.getHomeInfo()
-        homeCall.enqueue(object : Callback<ResponseInfo>{
-            override fun onFailure(call: Call<ResponseInfo>?, t: Throwable?) {
-                Log.e("home","没有连上服务器")
-            }
-
-            override fun onResponse(call: Call<ResponseInfo>?, response: Response<ResponseInfo>?) {
-                if(response == null){
-                    Log.e("home","服务器没有成功返回")
-                }else{
-                    if(response.isSuccessful){
-                        val responseInfo = response.body()
-                        if("0".equals(responseInfo.code)){
-                            val json = responseInfo.data
-                            parserJson(json)
-                        }else if("-1".equals(responseInfo.code)){
-                            Log.e("home","空数据")
-                        }
-                    }else{
-                        Log.e("home", "服务器代码错误")
-                    }
-                }
-            }
-        })
-
+        homeCall.enqueue(callback)
     }
 
     /**
      * 解析请求到服务器的数据
      */
-    private fun parserJson(json: String) {
+    override fun parserJson(json: String) {
         val gson = Gson()
         Log.e("home", gson.toJson(json))
         var jsonObject = JSONObject(json)
@@ -79,8 +46,9 @@ class HomeFragmentPresenter(val homeFragment: HomeFragment){
         if(nearBySellers.isNotEmpty() || otherSellers.isNotEmpty()){
             // 有数据，成功页面
             homeFragment.onHomeSuccess(nearBySellers, otherSellers)
+        }else{
             // 无数据，异常页面
-            //homeFragment.onHomeFailed()
+            homeFragment.onHomeFailed()
         }
 
     }
