@@ -8,10 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.daimajia.slider.library.SliderLayout
 import com.daimajia.slider.library.SliderTypes.TextSliderView
-import com.daimajia.slider.library.Tricks.ViewPagerEx
 import com.daimajia.slider.library.Tricks.ViewPagerEx.OnPageChangeListener
-import org.jetbrains.anko.find
 import xin.spring.heimatakeout.R
+import xin.spring.heimatakeout.model.beans.Seller
 
 /**
  * @author glsite.com
@@ -27,10 +26,11 @@ class HomeRvAdapter(val context : Context) : RecyclerView.Adapter<RecyclerView.V
         val TYPE_SELLER = 1
     }
 
-    var mDatas : ArrayList<String> = ArrayList()
+    var mDatas : ArrayList<Seller> = ArrayList<Seller>()
 
-    fun setData(data : ArrayList<String>){
+    fun setData(data: ArrayList<Seller>){
         this.mDatas = data
+        notifyDataSetChanged()
     }
 
     /**
@@ -115,10 +115,15 @@ class HomeRvAdapter(val context : Context) : RecyclerView.Adapter<RecyclerView.V
      */
     inner class SellerItemHolder(item: View) : RecyclerView.ViewHolder(item){
 
+        val tvTtile : TextView
+
         init {
+            tvTtile = item.findViewById(R.id.tv_title)
         }
 
-        fun bindData(data : String){
+        fun bindData(seller : Seller){
+            Log.e("ssss", seller.name)
+            tvTtile.text = seller.name
         }
 
     }
