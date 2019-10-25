@@ -4,11 +4,15 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.daimajia.slider.library.SliderLayout
 import com.daimajia.slider.library.SliderTypes.TextSliderView
 import com.daimajia.slider.library.Tricks.ViewPagerEx.OnPageChangeListener
+import com.squareup.picasso.Picasso
+import org.jetbrains.anko.find
 import xin.spring.heimatakeout.R
 import xin.spring.heimatakeout.model.beans.Seller
 
@@ -116,14 +120,31 @@ class HomeRvAdapter(val context : Context) : RecyclerView.Adapter<RecyclerView.V
     inner class SellerItemHolder(item: View) : RecyclerView.ViewHolder(item){
 
         val tvTtile : TextView
+        val ivLogo : ImageView
+        val ivScore : RatingBar
+        val tvSale: TextView
+        val tvSendPrice: TextView
+        val tvDistance: TextView
+        lateinit var mSeller: Seller
 
         init {
-            tvTtile = item.findViewById(R.id.tv_title)
+            tvTtile = item.find(R.id.tv_title)
+            ivLogo = item.find(R.id.seller_logo);
+            ivScore = item.find(R.id.ratingBar);
+
+            tvSale = item.find(R.id.tv_home_sale)
+            tvSendPrice = item.find(R.id.tv_home_send_price)
+            tvDistance = item.find(R.id.tv_home_distance)
         }
 
         fun bindData(seller : Seller){
             Log.e("ssss", seller.name)
             tvTtile.text = seller.name
+            Picasso.with(context).load(seller.icon).into(ivLogo)
+            ivScore.rating = seller.score.toFloat()
+            tvSale.text = "月售${seller.sale}单"
+            tvSendPrice.text = "￥${seller.sendPrice}起送/配送费￥${seller.deliveryFee}"
+            tvDistance.text = seller.distance
         }
 
     }
